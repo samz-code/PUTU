@@ -210,7 +210,7 @@ export default function AdminLayout() {
   return (
     <DashboardShell
       title="Admin Portal"
-      subtitle="Operations, Lead Pipelines & Site Management"
+      subtitle="Everything you need to run Putu Travels day to day"
       navItems={adminNavItems}
       homePath="/admin"
     />
