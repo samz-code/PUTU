@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Ibarra+Real+Nova:wght@400;500;600;700&family=Lemon&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-sans text-cocoa-700 bg-white antialiased;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-coral-500 text-white text-base font-semibold tracking-wide rounded-lg transition-colors duration-200 hover:bg-coral-600 focus:outline-none focus:ring-2 focus:ring-coral-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-white text-cocoa-700 text-base font-semibold tracking-wide rounded-lg border border-slate-200 transition-colors duration-200 hover:bg-sand-100 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-teal {
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-teal-500 text-white text-base font-semibold tracking-wide rounded-lg transition-colors duration-200 hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-transparent text-cocoa-600 text-base font-semibold tracking-wide rounded-lg border border-cocoa-200 transition-colors duration-200 hover:border-cocoa-400 hover:bg-sand-100 focus:outline-none focus:ring-2 focus:ring-cocoa-300 focus:ring-offset-2;
+  }
+
+  .card {
+    @apply bg-white rounded-lg border border-sand-200 shadow-card;
+  }
+
+  .card-md {
+    @apply bg-white rounded-xl border border-sand-200 shadow-card-md;
+  }
+
+  .input {
+    @apply w-full px-4 py-3.5 text-base text-cocoa-700 bg-white border border-slate-200 rounded-lg transition-colors duration-200 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500;
+  }
+
+  .label {
+    @apply block text-base font-medium text-cocoa-600 mb-2;
+  }
+
+  .section-title {
+    @apply font-serif text-4xl font-semibold text-cocoa-700;
+  }
+
+  .section-subtitle {
+    @apply text-lg text-slate-500 mt-4 leading-relaxed;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-md text-sm font-medium;
+  }
+
+  .badge-coral {
+    @apply badge bg-coral-50 text-coral-700;
+  }
+
+  .badge-teal {
+    @apply badge bg-teal-50 text-teal-700;
+  }
+
+  .badge-slate {
+    @apply badge bg-slate-100 text-slate-600;
+  }
+
+  .badge-ocean {
+    @apply badge bg-ocean-50 text-ocean-700;
+  }
+
+  .badge-success {
+    @apply badge bg-success-50 text-success-700;
+  }
+
+  .badge-warning {
+    @apply badge bg-warning-50 text-warning-700;
+  }
+
+  .badge-error {
+    @apply badge bg-error-50 text-error-700;
+  }
+
+  .nav-link {
+    @apply text-base font-medium text-slate-600 hover:text-cocoa-700 transition-colors duration-150;
+  }
+
+  .sidebar-link {
+    @apply flex items-center gap-3 px-3 py-3 text-base font-medium text-slate-600 rounded-lg hover:bg-sand-100 hover:text-cocoa-700 transition-colors duration-150;
+  }
+
+  .sidebar-link-active {
+    @apply flex items-center gap-3 px-3 py-3 text-base font-medium bg-coral-50 text-coral-700 rounded-lg;
+  }
+
+  .stat-card {
+    @apply card p-6 flex flex-col gap-1.5;
+  }
+
+  .page-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .wordmark-putu {
+    @apply font-serif font-semibold text-cocoa-700;
+  }
+
+  .wordmark-travels {
+    @apply font-lemon text-cocoa-600;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
