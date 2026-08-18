@@ -1,6 +1,6 @@
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
-import { Menu, X, ChevronDown, Phone } from 'lucide-react';
+import { Menu, X, ChevronDown, Phone, LogIn } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 
 const servicesLinks = [
@@ -133,6 +133,8 @@ export default function Navbar() {
     role === 'guide' ? '/partner/guide' :
     '/portal';
 
+  const mobileAccountPath = user ? dashboardPath : '/login';
+
   return (
     <header
       className={`bg-white sticky top-0 z-40 transition-shadow duration-300 ${
@@ -225,15 +227,24 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Mobile toggle */}
-          <button
-            className="lg:hidden p-2 text-cocoa-700 rounded-md hover:bg-sand-100 transition-colors"
-            onClick={() => setOpen(!open)}
-            aria-expanded={open}
-            aria-label="Toggle navigation menu"
-          >
-            {open ? <X size={22} /> : <Menu size={22} />}
-          </button>
+          {/* Mobile actions: account icon + hamburger */}
+          <div className="flex items-center gap-3 lg:hidden">
+            <Link
+              to={mobileAccountPath}
+              aria-label={user ? 'Go to your dashboard' : 'Login or register'}
+              className="flex items-center justify-center w-10 h-10 rounded-full text-cocoa-700 hover:bg-sand-100 active:scale-95 transition-all duration-150"
+            >
+              <LogIn size={24} strokeWidth={2.5} />
+            </Link>
+            <button
+              className="p-2 text-cocoa-700 rounded-md hover:bg-sand-100 transition-colors"
+              onClick={() => setOpen(!open)}
+              aria-expanded={open}
+              aria-label="Toggle navigation menu"
+            >
+              {open ? <X size={26} /> : <Menu size={26} />}
+            </button>
+          </div>
         </div>
       </div>
 

@@ -2,9 +2,10 @@ import {
   LayoutDashboard, Home, Compass, Building2, Plane, FileSpreadsheet, FileText, 
   Users, Hotel, Utensils, Car, UserCheck, Truck, 
   CreditCard, Calendar, FolderOpen, BarChart3, Star, 
-  Settings, Shield, Sparkles, Info, BookOpen 
+  Settings, Shield, Sparkles, Info, BookOpen, MessageSquare, BellRing 
 } from 'lucide-react';
 import DashboardShell, { NavItem } from '@/components/DashboardShell';
+import Notifications from '@/components/Notifications';
 
 export interface CategorizedNavItem extends NavItem {
   category: 'Overview' | 'Content Management' | 'Sales & CRM' | 'Vendors & Fleet' | 'Administration';
@@ -13,7 +14,7 @@ export interface CategorizedNavItem extends NavItem {
 
 export default function AdminLayout() {
   const adminNavItems: CategorizedNavItem[] = [
-    // --- 1. OVERVIEW & MONITORING ---
+    // 1. OVERVIEW
     { 
       to: '/admin', 
       label: 'Dashboard', 
@@ -37,7 +38,7 @@ export default function AdminLayout() {
       badgeColor: 'bg-slate-100 text-slate-700 border-slate-200'
     },
 
-    // --- 2. CATALOG & CONTENT MANAGEMENT ---
+    // 2. CONTENT MANAGEMENT
     { 
       to: '/admin/home-content', 
       label: 'Homepage Content', 
@@ -109,7 +110,7 @@ export default function AdminLayout() {
       badgeColor: 'bg-teal-50 text-teal-700 border-teal-200'
     },
 
-    // --- 3. SALES & CLIENT OPERATIONS ---
+    // 3. SALES & CRM
     { 
       to: '/admin/bookings', 
       label: 'Bookings', 
@@ -139,6 +140,13 @@ export default function AdminLayout() {
       badgeColor: 'bg-blue-50 text-blue-700 border-blue-200'
     },
     { 
+      to: '/admin/messages', 
+      label: 'Messages', 
+      icon: MessageSquare,
+      category: 'Sales & CRM',
+      badgeColor: 'bg-blue-50 text-blue-700 border-blue-200'
+    },
+    { 
       to: '/admin/payments', 
       label: 'Payments', 
       icon: CreditCard,
@@ -153,7 +161,7 @@ export default function AdminLayout() {
       badgeColor: 'bg-blue-50 text-blue-700 border-blue-200'
     },
 
-    // --- 4. VENDOR & FLEET LOGISTICS ---
+    // 4. VENDORS & FLEET
     { 
       to: '/admin/hotels', 
       label: 'Hotel Partners', 
@@ -190,7 +198,14 @@ export default function AdminLayout() {
       badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200'
     },
 
-    // --- 5. SYSTEM & ADMINISTRATION ---
+    // 5. ADMINISTRATION
+    { 
+      to: '/admin/notifications', 
+      label: 'System Alerts', 
+      icon: BellRing,
+      category: 'Administration',
+      badgeColor: 'bg-rose-50 text-rose-700 border-rose-200'
+    },
     { 
       to: '/admin/settings', 
       label: 'Settings', 
@@ -213,6 +228,7 @@ export default function AdminLayout() {
       subtitle="Everything you need to run Putu Travels day to day"
       navItems={adminNavItems}
       homePath="/admin"
+      topRightContent={<Notifications />}
     />
   );
 }

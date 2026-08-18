@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Plane, LogIn, LogOut, DollarSign, FileSpreadsheet, CreditCard,
-  Car, Users, Hotel, Bell, ArrowRight, TrendingUp, Sparkles, Check,
+  Car, Users, Hotel, ArrowRight, TrendingUp, Sparkles, Check,
   X, MessageSquare, Plus, RefreshCw, ShieldCheck
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
@@ -83,24 +83,8 @@ export default function AdminDashboard() {
     const today = new Date().toISOString().split('T')[0];
 
     try {
-      const [
-        todayBookingsRes,
-        arrivalsRes,
-        departuresRes,
-        paymentsRes,
-        quotesRes,
-        pendingPaymentsRes,
-        vehiclesRes,
-        driversRes,
-        notificationsRes,
-        recentBookingsRes,
-        checkedInRes,
-        totalHotelsRes,
-        briefsCountRes,
-        recentBriefsRes,
-        experiencesRes,
-        pendingReviewsRes,
-      ] = await Promise.all([
+      // Use Promise.allSettled so if any single table or column is missing, the rest still load successfully
+      const results = await Promise.allSettled([
         supabase.from('bookings').select('*', { count: 'exact', head: true }).gte('created_at', today),
         supabase.from('bookings').select('*', { count: 'exact', head: true }).eq('arrival_date', today),
         supabase.from('bookings').select('*', { count: 'exact', head: true }).eq('departure_date', today),
@@ -118,6 +102,28 @@ export default function AdminDashboard() {
         supabase.from('experiences').select('*').order('created_at', { ascending: false }).limit(5),
         supabase.from('reviews').select('*').eq('is_approved', false).order('created_at', { ascending: false }).limit(3),
       ]);
+
+      const getVal = (index: number, fallback: any = { count: 0, data: [] }) => {
+        const res = results[index];
+        return res.status === 'fulfilled' ? res.value : fallback;
+      };
+
+      const todayBookingsRes = getVal(0);
+      const arrivalsRes = getVal(1);
+      const departuresRes = getVal(2);
+      const paymentsRes = getVal(3, { data: [] });
+      const quotesRes = getVal(4);
+      const pendingPaymentsRes = getVal(5);
+      const vehiclesRes = getVal(6);
+      const driversRes = getVal(7);
+      const notificationsRes = getVal(8);
+      const recentBookingsRes = getVal(9, { data: [] });
+      const checkedInRes = getVal(10);
+      const totalHotelsRes = getVal(11);
+      const briefsCountRes = getVal(12);
+      const recentBriefsRes = getVal(13, { data: [] });
+      const experiencesRes = getVal(14, { data: [] });
+      const pendingReviewsRes = getVal(15, { data: [] });
 
       const payments = paymentsRes.data as any[] ?? [];
       const revenue = payments.reduce((sum, p) => sum + Number(p.amount || 0), 0);

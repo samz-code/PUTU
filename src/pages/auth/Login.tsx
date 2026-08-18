@@ -14,7 +14,7 @@ export default function Login() {
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  
+
   // Forgot Password state
   const [isForgotMode, setIsForgotMode] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
@@ -37,7 +37,7 @@ export default function Login() {
 
     // Fetch the updated session directly to inspect user role immediately
     const { data: { session } } = await supabase.auth.getSession();
-    
+
     let userRole = session?.user?.app_metadata?.role || session?.user?.user_metadata?.role;
 
     // Fallback: check the customers database table if role is not in JWT metadata
@@ -53,8 +53,8 @@ export default function Login() {
     setLoading(false);
 
     // Dynamic redirect target: respect explicit state redirect, otherwise route based on role
-    const explicitRedirect = 
-      (location.state as { from?: string })?.from || 
+    const explicitRedirect =
+      (location.state as { from?: string })?.from ||
       (location.state as { redirectTo?: string })?.redirectTo;
 
     const defaultRoute = userRole === 'admin' ? '/admin' : '/portal';
@@ -107,34 +107,34 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-80px)] flex items-center justify-center bg-sand-50 py-6 px-4 sm:py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-4 sm:space-y-6">
-        
+    <div className="sm:min-h-[calc(100vh-80px)] flex items-start sm:items-center justify-center bg-sand-50 pt-6 pb-6 px-4 sm:py-12 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md space-y-3 sm:space-y-6">
+
         {/* Brand Header */}
         <div className="text-center">
           <Link to="/" className="inline-block group transition-transform duration-200 hover:scale-105">
-            <img 
-              src="/logo.png" 
-              alt="Logo" 
-              className="h-12 sm:h-16 w-auto object-contain mx-auto" 
+            <img
+              src="/putu_mark.png"
+              alt="Logo"
+              className="h-16 sm:h-20 w-auto object-contain mx-auto"
             />
           </Link>
-          <h2 className="mt-3 sm:mt-4 text-2xl sm:text-3xl font-serif font-bold text-cocoa-900 tracking-tight">
+          <h2 className="mt-1.5 sm:mt-4 text-xl sm:text-3xl font-serif font-bold text-cocoa-900 tracking-tight">
             {isForgotMode ? 'Reset Password' : 'Welcome Back'}
           </h2>
-          <p className="mt-1 text-xs sm:text-sm text-slate-500 font-medium">
-            {isForgotMode 
-              ? 'Enter your email and we will send you a reset link' 
+          <p className="mt-0.5 sm:mt-1 text-xs sm:text-sm text-slate-500 font-medium">
+            {isForgotMode
+              ? 'Enter your email and we will send you a reset link'
               : 'Sign in to access your personal concierge portal'}
           </p>
         </div>
 
         {/* Auth Card */}
-        <div className="bg-white p-5 sm:p-8 rounded-2xl sm:rounded-3xl shadow-lg sm:shadow-xl shadow-slate-200/50 border border-slate-100 space-y-4 sm:space-y-6">
-          
+        <div className="bg-white p-4 sm:p-8 rounded-2xl sm:rounded-3xl shadow-lg sm:shadow-xl shadow-slate-200/50 border border-slate-100 space-y-3 sm:space-y-6">
+
           {/* Error Banner */}
           {error && (
-            <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-rose-50 border border-rose-200/60 text-xs font-semibold text-rose-700 flex items-center gap-2">
+            <div className="p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-rose-50 border border-rose-200/60 text-xs font-semibold text-rose-700 flex items-center gap-2">
               <svg className="w-4 h-4 shrink-0 text-rose-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
               </svg>
@@ -144,7 +144,7 @@ export default function Login() {
 
           {/* Success Banner */}
           {successMsg && (
-            <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-emerald-50 border border-emerald-200/60 text-xs font-semibold text-emerald-800 flex items-center gap-2">
+            <div className="p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-emerald-50 border border-emerald-200/60 text-xs font-semibold text-emerald-800 flex items-center gap-2">
               <svg className="w-4 h-4 shrink-0 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
               </svg>
@@ -187,7 +187,7 @@ export default function Login() {
               </button>
 
               {/* Divider */}
-              <div className="relative flex items-center my-2 sm:my-4">
+              <div className="relative flex items-center my-1.5 sm:my-4">
                 <div className="flex-grow border-t border-slate-200"></div>
                 <span className="flex-shrink mx-3 text-[10px] sm:text-xs uppercase font-semibold text-slate-400 tracking-wider">
                   Or with email
@@ -196,7 +196,7 @@ export default function Login() {
               </div>
 
               {/* Login Form */}
-              <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-2.5 sm:space-y-4">
                 <div>
                   <label className="block text-[11px] sm:text-xs font-bold text-cocoa-700 uppercase tracking-wider mb-1" htmlFor="email">
                     Email Address
@@ -243,7 +243,7 @@ export default function Login() {
                 <button
                   type="submit"
                   disabled={loading || googleLoading}
-                  className="w-full py-3 sm:py-3.5 px-4 bg-cocoa-800 hover:bg-cocoa-900 text-white font-semibold text-xs sm:text-sm rounded-xl shadow-md transition-all duration-200 active:scale-[0.99] disabled:opacity-60 mt-2"
+                  className="w-full py-3 sm:py-3.5 px-4 bg-cocoa-800 hover:bg-cocoa-900 text-white font-semibold text-xs sm:text-sm rounded-xl shadow-md transition-all duration-200 active:scale-[0.99] disabled:opacity-60 mt-1.5 sm:mt-2"
                 >
                   {loading ? (
                     <span className="flex items-center justify-center gap-2">
@@ -258,7 +258,7 @@ export default function Login() {
             </>
           ) : (
             /* Forgot Password Form */
-            <form onSubmit={handleForgotPassword} className="space-y-4">
+            <form onSubmit={handleForgotPassword} className="space-y-3 sm:space-y-4">
               <div>
                 <label className="block text-[11px] sm:text-xs font-bold text-cocoa-700 uppercase tracking-wider mb-1" htmlFor="reset-email">
                   Email Address
@@ -289,7 +289,7 @@ export default function Login() {
                 )}
               </button>
 
-              <div className="text-center pt-2">
+              <div className="text-center pt-1 sm:pt-2">
                 <button
                   type="button"
                   onClick={() => {
@@ -306,7 +306,7 @@ export default function Login() {
           )}
 
           {/* Footer link */}
-          <div className="text-center pt-2 sm:pt-3 border-t border-slate-100">
+          <div className="text-center pt-1.5 sm:pt-3 border-t border-slate-100">
             <p className="text-xs sm:text-sm text-slate-500 font-medium">
               Don’t have an account?{' '}
               <Link to="/register" state={location.state} className="font-semibold text-coral-600 hover:text-coral-700 transition-colors">

@@ -68,6 +68,8 @@ import AdminConcierge from '@/pages/admin/AdminConcierge';
 import AdminDestinations from '@/pages/admin/AdminDestinations';
 import AdminJournal from '@/pages/admin/AdminJournal';
 import AdminHerTurn from '@/pages/admin/AdminHerTurn';
+import AdminMessages from '@/pages/admin/AdminMessages';
+import AdminNotifications from '@/pages/admin/AdminNotifications'; // <-- Added Admin Notifications View
 
 // Partner Portals
 import HotelLayout from '@/pages/partner/hotel/HotelLayout';
@@ -111,7 +113,7 @@ export default function App() {
             <Route path="/journal" element={<Journal />} />
             <Route path="/journal/:slug" element={<JournalArticleDetail />} />
 
-            {/* Her Turn — editions, ticket checkout, and post-payment confirmation */}
+            {/* Her Turn */}
             <Route path="/her-turn" element={<HerTurn />} />
             <Route path="/her-turn/confirmation" element={<HerTurnConfirmation />} />
             <Route path="/her-turn/:slug/checkout" element={<HerTurnCheckout />} />
@@ -157,6 +159,7 @@ export default function App() {
             <Route path="briefs" element={<AdminBriefs />} />
             <Route path="quotes" element={<AdminQuotes />} />
             <Route path="customers" element={<AdminCustomers />} />
+            <Route path="messages" element={<AdminMessages />} />
             <Route path="hotels" element={<AdminHotels />} />
             <Route path="restaurants" element={<AdminRestaurants />} />
             <Route path="drivers" element={<AdminDrivers />} />
@@ -167,6 +170,7 @@ export default function App() {
             <Route path="documents" element={<AdminDocuments />} />
             <Route path="analytics" element={<AdminAnalytics />} />
             <Route path="reviews" element={<AdminReviews />} />
+            <Route path="notifications" element={<AdminNotifications />} /> {/* <-- Registered Route */}
             <Route path="settings" element={<AdminSettings />} />
             <Route path="super" element={<AdminSuper />} />
           </Route>
