@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import type { HerTurnEdition, HerTurnPageSettings } from '@/types/herTurn';
-import { DEFAULT_HER_TURN_PAGE_SETTINGS } from '@/types/herTurn';
+import { DEFAULT_HER_TURN_PAGE_SETTINGS } from '@/types/HerTurn';
 import { Sparkles, Calendar, MapPin, ArrowRight, CheckCircle2, Heart, Users } from 'lucide-react';
 
 function formatDateRange(start: string, end: string) {

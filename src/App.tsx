@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from '@/lib/auth';
 import PublicLayout from '@/components/PublicLayout';
 import ProtectedRoute from '@/components/ProtectedRoute';
+import ScrollToTop from '@/components/ScrollToTop';
 
 // Public Pages
 import Home from '@/pages/public/Home';
@@ -69,7 +70,7 @@ import AdminDestinations from '@/pages/admin/AdminDestinations';
 import AdminJournal from '@/pages/admin/AdminJournal';
 import AdminHerTurn from '@/pages/admin/AdminHerTurn';
 import AdminMessages from '@/pages/admin/AdminMessages';
-import AdminNotifications from '@/pages/admin/AdminNotifications'; // <-- Added Admin Notifications View
+import AdminNotifications from '@/pages/admin/AdminNotifications';
 
 // Partner Portals
 import HotelLayout from '@/pages/partner/hotel/HotelLayout';
@@ -99,6 +100,7 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           {/* Public website */}
           <Route element={<PublicLayout />}>
@@ -120,7 +122,7 @@ export default function App() {
             <Route path="/her-turn/:slug" element={<HerTurnEditionDetail />} />
 
             <Route path="/contact" element={<Contact />} />
-            
+
             {/* Auth Routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
@@ -170,7 +172,7 @@ export default function App() {
             <Route path="documents" element={<AdminDocuments />} />
             <Route path="analytics" element={<AdminAnalytics />} />
             <Route path="reviews" element={<AdminReviews />} />
-            <Route path="notifications" element={<AdminNotifications />} /> {/* <-- Registered Route */}
+            <Route path="notifications" element={<AdminNotifications />} />
             <Route path="settings" element={<AdminSettings />} />
             <Route path="super" element={<AdminSuper />} />
           </Route>
