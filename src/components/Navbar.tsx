@@ -142,13 +142,13 @@ export default function Navbar() {
       }`}
     >
       <div className="page-container">
-        <div className="flex items-center justify-between h-24 lg:h-28">
+        <div className="flex items-center justify-between h-16 sm:h-20 md:h-24 lg:h-28">
           {/* Logo */}
-          <Link to="/" className="flex items-center flex-shrink-0 py-2">
+          <Link to="/" className="flex items-center flex-shrink-0 py-1 sm:py-2 min-w-0">
             <img
               src="/logo.png"
               alt="Putu Travels"
-              className="h-20 lg:h-24 w-auto object-contain"
+              className="h-11 sm:h-14 md:h-20 lg:h-24 w-auto object-contain"
             />
           </Link>
 
@@ -196,7 +196,7 @@ export default function Navbar() {
 
           {/* Right actions */}
           <div className="hidden lg:flex items-center gap-3">
-            <a
+            
               href="tel:+254714446328"
               className="flex items-center gap-1.5 text-sm font-bold uppercase tracking-wide text-teal-700 bg-teal-50 hover:bg-teal-100 rounded-md pl-3 pr-4 py-2 transition-colors duration-150"
             >
@@ -228,21 +228,21 @@ export default function Navbar() {
           </div>
 
           {/* Mobile actions: account icon + hamburger */}
-          <div className="flex items-center gap-3 lg:hidden">
+          <div className="flex items-center gap-1 sm:gap-2 lg:hidden flex-shrink-0">
             <Link
               to={mobileAccountPath}
               aria-label={user ? 'Go to your dashboard' : 'Login or register'}
-              className="flex items-center justify-center w-10 h-10 rounded-full text-cocoa-700 hover:bg-sand-100 active:scale-95 transition-all duration-150"
+              className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full text-cocoa-700 hover:bg-sand-100 active:scale-95 transition-all duration-150 flex-shrink-0"
             >
-              <LogIn size={24} strokeWidth={2.5} />
+              <LogIn size={22} strokeWidth={2.5} />
             </Link>
             <button
-              className="p-2 text-cocoa-700 rounded-md hover:bg-sand-100 transition-colors"
+              className="p-2 text-cocoa-700 rounded-md hover:bg-sand-100 transition-colors flex-shrink-0"
               onClick={() => setOpen(!open)}
               aria-expanded={open}
               aria-label="Toggle navigation menu"
             >
-              {open ? <X size={26} /> : <Menu size={26} />}
+              {open ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
@@ -256,7 +256,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="lg:hidden border-t border-sand-200 bg-white max-h-[calc(100vh-4rem)] overflow-y-auto">
+        <div className="lg:hidden border-t border-sand-200 bg-white max-h-[calc(100vh-4rem)] overflow-y-auto overflow-x-hidden">
           <nav className="page-container py-4 flex flex-col gap-1">
             <Link to="/" className="py-2.5 text-sm font-bold uppercase tracking-wide text-cocoa-700">Home</Link>
 
@@ -295,7 +295,7 @@ export default function Navbar() {
             </div>
 
             <div className="pt-4 border-t border-sand-200">
-              <a
+              
                 href="tel:+254714446328"
                 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-teal-700 bg-teal-50 rounded-md w-fit pl-3 pr-4 py-2"
               >
@@ -303,11 +303,11 @@ export default function Navbar() {
               </a>
             </div>
 
-            <div className="flex gap-3 pt-3 border-t border-sand-200">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3 pt-3 border-t border-sand-200">
               {user ? (
                 <Link
                   to={dashboardPath}
-                  className="flex-1 text-center rounded-md bg-coral-600 text-white font-bold uppercase tracking-wide py-2.5 text-xs"
+                  className="col-span-2 text-center rounded-md bg-coral-600 text-white font-bold uppercase tracking-wide py-3 text-xs sm:text-sm whitespace-nowrap"
                 >
                   Dashboard
                 </Link>
@@ -315,13 +315,13 @@ export default function Navbar() {
                 <>
                   <Link
                     to="/login"
-                    className="flex-1 text-center rounded-md border border-teal-700 text-teal-700 font-bold uppercase tracking-wide py-2.5 text-xs"
+                    className="text-center rounded-md border border-teal-700 text-teal-700 font-bold uppercase tracking-wide py-3 px-1 text-xs sm:text-sm whitespace-nowrap"
                   >
                     Login
                   </Link>
                   <Link
                     to="/register"
-                    className="flex-1 text-center rounded-md bg-coral-600 text-white font-bold uppercase tracking-wide py-2.5 text-xs"
+                    className="text-center rounded-md bg-coral-600 text-white font-bold uppercase tracking-wide py-3 px-1 text-xs sm:text-sm whitespace-nowrap"
                   >
                     Register
                   </Link>
