@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import type { HerTurnPageSettings } from '@/types/herTurn';
-import { DEFAULT_HER_TURN_PAGE_SETTINGS } from '@/types/herTurn';
+import type { HerTurnPageSettings } from '@/types/Herturn';
+import { DEFAULT_HER_TURN_PAGE_SETTINGS } from '@/types/Herturn';
 import { Save, CheckCircle2, AlertCircle, X, Eye } from 'lucide-react';
 
 export default function PageContentManager() {

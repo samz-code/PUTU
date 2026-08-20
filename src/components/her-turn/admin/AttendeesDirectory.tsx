@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef, DragEvent } from 'react';
 import { supabase } from '@/lib/supabase';
-import type { HerTurnEdition, HerTurnRegistration } from '@/types/herTurn';
+import type { HerTurnEdition, HerTurnRegistration } from '@/types/Herturn';
 import {
   Search, Download, CheckCircle2, Clock, XCircle, RefreshCcw,
   Upload, X, Image as ImageIcon, Plus, Pencil, Trash2, User,

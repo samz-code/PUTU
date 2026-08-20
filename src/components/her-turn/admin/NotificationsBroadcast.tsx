@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import type { HerTurnEdition } from '@/types/herTurn';
+import type { HerTurnEdition } from '@/types/Herturn';
 import { Send, Mail, MessageSquare, Users, CheckCircle2, AlertCircle } from 'lucide-react';
 
 interface NotificationLogEntry {

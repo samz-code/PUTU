@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import type { HerTurnEdition, HerTurnTicketTier, HerTurnWaitlistEntry } from '@/types/herTurn';
-import { tierSpotsLeft } from '@/types/herTurn';
+import type { HerTurnEdition, HerTurnTicketTier, HerTurnWaitlistEntry } from '@/types/Herturn';
+import { tierSpotsLeft } from '@/types/Herturn';
 import { Users, CheckCircle2, X, Copy, ExternalLink } from 'lucide-react';
 
 export default function WaitlistManager() {

@@ -6,7 +6,7 @@ import type {
   HerTurnItineraryItem,
   HerTurnSpeaker,
   HerTurnPartner,
-} from '@/types/herTurn';
+} from '@/types/Herturn';
 import {
   Plus,
   Pencil,

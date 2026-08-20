@@ -23,7 +23,12 @@ export interface HerTurnEdition {
   slug: string;
   subtitle: string;
   status: 'draft' | 'published' | 'archived';
-  edition_type: 'retreat' | 'dhow_cruise' | 'networking' | 'workshop' | 'other';
+  edition_type:
+    | 'retreat'
+    | 'dhow_cruise'
+    | 'networking'
+    | 'workshop'
+    | 'other';
   start_date: string;
   end_date: string;
   start_time: string;
@@ -73,7 +78,13 @@ export interface HerTurnRegistration {
   amount_due: number;
   amount_paid: number;
   currency: string;
-  status: 'pending' | 'paid' | 'failed' | 'cancelled' | 'refunded' | 'checked_in';
+  status:
+    | 'pending'
+    | 'paid'
+    | 'failed'
+    | 'cancelled'
+    | 'refunded'
+    | 'checked_in';
   qr_token: string | null;
   merchant_reference: string;
   checked_in_at: string | null;
@@ -108,29 +119,49 @@ export interface HerTurnPageSettings {
 
 /**
  * Used only as a render fallback for the brief window before the database
- * row loads (or if the migration hasn't been run yet) — never as a
- * substitute for the admin-editable content itself.
+ * row loads or if the migration has not been run yet.
+ * It is never a substitute for admin-editable content itself.
  */
-export const DEFAULT_HER_TURN_PAGE_SETTINGS: Omit<HerTurnPageSettings, 'id'> = {
+export const DEFAULT_HER_TURN_PAGE_SETTINGS: Omit<
+  HerTurnPageSettings,
+  'id'
+> = {
   hero_badge_text: 'Exclusive Women Editions & Retreats',
   hero_title: 'Her Turn: Travel. Connect. Thrive.',
-  hero_subtitle: 'Curated journeys, empowering wellness retreats, and exclusive social gatherings created by women, for women, along the breathtaking shores of Diani.',
+  hero_subtitle:
+    'Curated journeys, empowering wellness retreats, and exclusive social gatherings created by women, for women, along the breathtaking shores of Diani.',
   value_heading: 'Designed For Women Who Seek Authenticity & Luxury',
-  value_body: 'Whether you are networking with ambitious female founders, unwinding with restorative beach yoga, or exploring the coast in a supportive sisterhood group, Her Turn offers uncompromised safety, luxury, and community.',
-  value_checklist: ['Verified Luxury Stays', 'Dedicated Female Hosts', 'Private Transfers Included', 'Tailored Networking & Wellness'],
+  value_body:
+    'Whether you are networking with ambitious female founders, unwinding with restorative beach yoga, or exploring the coast in a supportive sisterhood group, Her Turn offers uncompromised safety, luxury, and community.',
+  value_checklist: [
+    'Verified Luxury Stays',
+    'Dedicated Female Hosts',
+    'Private Transfers Included',
+    'Tailored Networking & Wellness',
+  ],
   sisterhood_heading: 'Join the Sisterhood',
-  sisterhood_body: 'Get early invitations to flash meetups, private cohort openings, and discount codes.',
+  sisterhood_body:
+    'Get early invitations to flash meetups, private cohort openings, and discount codes.',
   sisterhood_cta_text: 'Request Access',
   sisterhood_cta_link: '/contact',
 };
 
-export function effectiveTierPrice(tier: HerTurnTicketTier): number {
-  if (tier.early_bird_price && tier.early_bird_deadline && new Date() < new Date(tier.early_bird_deadline)) {
+export function effectiveTierPrice(
+  tier: HerTurnTicketTier,
+): number {
+  if (
+    tier.early_bird_price !== null &&
+    tier.early_bird_deadline &&
+    new Date() < new Date(tier.early_bird_deadline)
+  ) {
     return tier.early_bird_price;
   }
+
   return tier.price;
 }
 
-export function tierSpotsLeft(tier: HerTurnTicketTier): number {
+export function tierSpotsLeft(
+  tier: HerTurnTicketTier,
+): number {
   return Math.max(0, tier.stock_total - tier.stock_sold);
 }
