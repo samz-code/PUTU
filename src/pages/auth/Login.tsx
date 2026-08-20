@@ -39,10 +39,14 @@ export default function Login() {
     let userRole = session?.user?.app_metadata?.role || session?.user?.user_metadata?.role;
 
     if (!userRole && session?.user?.id) {
+      // NOTE: fixed to query `customers` — this previously queried a
+      // `profiles` table that doesn't exist anywhere else in the app
+      // (auth.tsx, the signup trigger, and Register all use `customers`).
+      // That mismatch meant role always fell through to the default here.
       const { data: profile } = await supabase
-        .from('profiles')
+        .from('customers')
         .select('role')
-        .eq('id', session.user.id)
+        .or(`id.eq.${session.user.id},user_id.eq.${session.user.id}`)
         .maybeSingle();
       userRole = profile?.role;
     }
@@ -308,7 +312,7 @@ export default function Login() {
           {/* Footer link */}
           <div className="text-center pt-1.5 sm:pt-3 border-t border-slate-100">
             <p className="text-xs sm:text-sm text-slate-500 font-medium">
-              Don’t have an account?{' '}
+              Don't have an account?{' '}
               <Link to="/register" state={location.state} className="font-semibold text-coral-600 hover:text-coral-700 hover:underline transition-all">
                 Create Account
               </Link>

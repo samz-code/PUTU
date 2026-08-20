@@ -101,19 +101,50 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password,
       options: { data: { full_name: fullName, role: selectedRole } },
     });
-    if (error) return { error: error.message };
-    if (data.user) {
-      try {
-        await supabase.from('customers').insert({
-          id: data.user.id,
-          user_id: data.user.id,
-          full_name: fullName,
-          role: selectedRole,
-        });
-      } catch {
-        // Ignore if row exists or non-customer insert fails
-      }
+
+    if (error) {
+      // Surface the real Supabase error text — don't paper over it.
+      // Common ones you'll actually see here:
+      //  - "User already registered" (422)
+      //  - "Database error saving new user" (500 — a DB trigger on auth.users is failing)
+      //  - "Password should be at least 6 characters" (422)
+      return { error: error.message };
     }
+
+    // NOTE: We deliberately do NOT insert into `customers` here.
+    // If a Postgres trigger on auth.users (e.g. handle_new_user) already
+    // creates the profile row, this insert would race it and throw a
+    // duplicate-key error — which is very likely the root cause of the
+    // 500s you were seeing on repeated signup attempts.
+    //
+    // Profile creation should happen in exactly ONE place:
+    //   - Preferred: a DB trigger (atomic, can't be skipped/duplicated by client)
+    //   - Or: client-side upsert with onConflict, ONLY if you confirm via
+    //     the Supabase dashboard that no trigger exists.
+    //
+    // If you don't yet have a trigger, use this SQL instead of the client
+    // insert (run once in the Supabase SQL editor):
+    //
+    // create or replace function public.handle_new_user()
+    // returns trigger as $$
+    // begin
+    //   insert into public.customers (id, user_id, full_name, role)
+    //   values (
+    //     new.id,
+    //     new.id,
+    //     new.raw_user_meta_data->>'full_name',
+    //     coalesce(new.raw_user_meta_data->>'role', 'customer')
+    //   )
+    //   on conflict (id) do nothing;
+    //   return new;
+    // end;
+    // $$ language plpgsql security definer set search_path = public;
+    //
+    // drop trigger if exists on_auth_user_created on auth.users;
+    // create trigger on_auth_user_created
+    //   after insert on auth.users
+    //   for each row execute function public.handle_new_user();
+
     return { error: null };
   };
 
