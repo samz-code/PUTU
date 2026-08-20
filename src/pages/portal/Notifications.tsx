@@ -1,81 +1,71 @@
 import { useEffect, useState, useCallback } from 'react';
-import { 
-  Bell, 
-  Trash2, 
-  AlertCircle, 
-  Check, 
-  Calendar, 
-  CreditCard, 
-  FileText, 
-  Compass, 
-  ShieldCheck, 
-  Loader2 
-} from 'lucide-react';
-import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/lib/auth';
-import PageHeader from '@/components/PageHeader';
+import { supabase } from '@/lib/supabase';
+import {
+  Bell,
+  CheckCheck,
+  Trash2,
+  Check,
+  ExternalLink,
+  MessageSquare,
+  FileText,
+  CreditCard,
+  Info,
+  Loader2,
+} from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-interface Notif {
+export interface NotificationItem {
   id: string;
   user_id: string;
-  type: 'booking' | 'payment' | 'document' | 'trip' | 'experience' | 'system' | 'partner_alert' | string;
+  type: string;
   title: string;
-  body: string | null;
+  body: string;
+  link?: string | null;
   is_read: boolean;
   created_at: string;
 }
 
+type FilterTab = 'all' | 'unread' | 'read';
+
 export default function Notifications() {
   const { user } = useAuth();
-  const [items, setItems] = useState<Notif[]>([]);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+  const [filter, setFilter] = useState<FilterTab>('all');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<'All' | 'Unread' | 'Read'>('All');
+  const [actionId, setActionId] = useState<string | null>(null);
 
-  const loadNotifications = useCallback(async () => {
-    if (!user?.id) {
-      setLoading(false);
-      return;
-    }
-
+  const fetchNotifications = useCallback(async () => {
+    if (!user) return;
     try {
-      setLoading(true);
-      setError(null);
-
-      const { data, error: fetchErr } = await supabase
+      const { data, error } = await supabase
         .from('notifications')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
-      if (fetchErr) throw fetchErr;
-      setItems((data as Notif[]) ?? []);
-    } catch (err: any) {
-      console.error('Error fetching notifications:', err);
-      setError('Unable to load notifications.');
+      if (error) throw error;
+      setNotifications(data || []);
+    } catch (err) {
+      console.error('Error loading notifications:', err);
     } finally {
       setLoading(false);
     }
-  }, [user?.id]);
+  }, [user]);
 
   useEffect(() => {
-    if (!user?.id) return;
+    fetchNotifications();
 
-    loadNotifications();
+    if (!user) return;
 
-    // Realtime subscription so incoming alerts show up instantly on this page too
+    // Realtime channel for live updates
     const channel = supabase
-      .channel(`notifications_page_${user.id}`)
+      .channel(`notifications-page-${user.id}`)
       .on(
         'postgres_changes',
-        { 
-          event: 'INSERT', 
-          schema: 'public', 
-          table: 'notifications', 
-          filter: `user_id=eq.${user.id}` 
-        },
-        (payload) => {
-          setItems((prev) => [payload.new as Notif, ...prev]);
+        { event: '*', schema: 'public', table: 'notifications', filter: `user_id=eq.${user.id}` },
+        () => {
+          fetchNotifications();
         }
       )
       .subscribe();
@@ -83,174 +73,199 @@ export default function Notifications() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user?.id, loadNotifications]);
+  }, [user, fetchNotifications]);
 
-  const markRead = async (id: string) => {
-    // Optimistic UI update
-    setItems((prev) => prev.map((n) => (n.id === id ? { ...n, is_read: true } : n)));
+  const markAsRead = async (id: string) => {
+    setActionId(id);
+    const { error } = await supabase
+      .from('notifications')
+      .update({ is_read: true })
+      .eq('id', id);
 
-    const { error } = await supabase.from('notifications').update({ is_read: true }).eq('id', id);
-    if (error) console.error('Failed to mark read:', error);
+    if (!error) {
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, is_read: true } : n))
+      );
+    }
+    setActionId(null);
   };
 
-  const markAllRead = async () => {
-    if (!user?.id) return;
-    // Optimistic UI update
-    setItems((prev) => prev.map((n) => ({ ...n, is_read: true })));
-
+  const markAllAsRead = async () => {
+    if (!user) return;
     const { error } = await supabase
       .from('notifications')
       .update({ is_read: true })
       .eq('user_id', user.id)
       .eq('is_read', false);
 
-    if (error) console.error('Failed to mark all read:', error);
+    if (!error) {
+      setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
+    }
   };
 
-  const deleteNotif = async (id: string) => {
-    // Optimistic UI update
-    setItems((prev) => prev.filter((n) => n.id !== id));
-
+  const deleteNotification = async (id: string) => {
+    setActionId(id);
     const { error } = await supabase.from('notifications').delete().eq('id', id);
-    if (error) console.error('Failed to delete notification:', error);
+
+    if (!error) {
+      setNotifications((prev) => prev.filter((n) => n.id !== id));
+    }
+    setActionId(null);
   };
 
-  const getIconForType = (type: string, isRead: boolean) => {
-    const iconClass = isRead ? 'text-slate-400' : 'text-[#0F766E]';
-    if (type.includes('booking') || type.includes('trip')) return <Calendar size={16} className={iconClass} />;
-    if (type.includes('payment')) return <CreditCard size={16} className={iconClass} />;
-    if (type.includes('document')) return <FileText size={16} className={iconClass} />;
-    if (type.includes('experience')) return <Compass size={16} className={iconClass} />;
-    if (type.includes('partner')) return <ShieldCheck size={16} className={iconClass} />;
-    return <Bell size={16} className={iconClass} />;
-  };
-
-  const filtered = items.filter((n) => {
-    if (filter === 'Unread') return !n.is_read;
-    if (filter === 'Read') return n.is_read;
+  const filteredNotifications = notifications.filter((item) => {
+    if (filter === 'unread') return !item.is_read;
+    if (filter === 'read') return item.is_read;
     return true;
   });
 
-  const unreadCount = items.filter((n) => !n.is_read).length;
+  const unreadCount = notifications.filter((n) => !n.is_read).length;
+
+  const getNotificationIcon = (type: string) => {
+    switch (type) {
+      case 'message_received':
+      case 'messaging':
+        return <MessageSquare className="w-5 h-5 text-coral-500" />;
+      case 'booking':
+        return <FileText className="w-5 h-5 text-amber-500" />;
+      case 'payment':
+        return <CreditCard className="w-5 h-5 text-emerald-500" />;
+      default:
+        return <Info className="w-5 h-5 text-cocoa-600" />;
+    }
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(date);
+  };
 
   return (
-    <div className="max-w-4xl mx-auto pb-12">
-      <PageHeader
-        title="Notifications"
-        subtitle="Your real-time alerts, bookings, and updates"
-        action={
-          unreadCount > 0 ? (
-            <button 
-              onClick={markAllRead} 
-              className="px-4 py-2 rounded-xl bg-[#FAF8F5] border border-[#EBE5DF] text-[#0F766E] text-xs font-bold hover:bg-[#EBE5DF]/50 transition-all cursor-pointer shadow-2xs"
-            >
-              Mark all read
-            </button>
-          ) : undefined
-        }
-      />
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* Header */}
+      <div>
+        <h1 className="font-serif text-2xl sm:text-3xl font-bold text-cocoa-900">Notifications</h1>
+        <p className="text-slate-500 text-sm sm:text-base mt-1">
+          Your real-time updates, messaging alerts, itinerary changes, and concierge updates
+        </p>
+      </div>
 
-      {/* Filter Tabs */}
-      <div className="mb-6 flex items-center gap-2 border-b border-[#F5F0EB] pb-4">
-        {(['All', 'Unread', 'Read'] as const).map((tab) => {
-          const tabCount = tab === 'Unread' ? unreadCount : tab === 'Read' ? items.length - unreadCount : items.length;
-          return (
+      {/* Filter and Actions Bar */}
+      <div className="bg-white p-3 sm:p-4 rounded-2xl border border-sand-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+        <div className="inline-flex bg-sand-100 p-1 rounded-xl border border-sand-200 self-start">
+          {(['all', 'unread', 'read'] as FilterTab[]).map((tab) => (
             <button
               key={tab}
               onClick={() => setFilter(tab)}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                filter === tab 
-                  ? 'bg-[#0F766E] text-white shadow-sm' 
-                  : 'bg-white border border-[#EBE5DF] text-slate-600 hover:bg-[#FAF8F5]'
+              className={`px-4 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all capitalize ${
+                filter === tab
+                  ? 'bg-white text-cocoa-900 shadow-sm font-semibold'
+                  : 'text-slate-600 hover:text-cocoa-900'
               }`}
             >
-              {tab} {tabCount > 0 ? `(${tabCount})` : ''}
+              {tab}
             </button>
-          );
-        })}
+          ))}
+        </div>
+
+        {unreadCount > 0 && (
+          <button
+            onClick={markAllAsRead}
+            className="flex items-center gap-1.5 text-xs sm:text-sm font-medium text-coral-600 hover:text-coral-700 transition-colors self-end sm:self-auto px-2 py-1"
+          >
+            <CheckCheck size={16} />
+            Mark all as read
+          </button>
+        )}
       </div>
 
-      {/* Main Content View */}
+      {/* Content Area */}
       {loading ? (
-        <div className="py-20 text-center text-sm text-slate-400 flex flex-col items-center gap-3">
-          <Loader2 size={24} className="animate-spin text-[#0F766E]" />
-          <span>Loading notifications...</span>
+        <div className="bg-white rounded-2xl border border-sand-200 p-12 flex flex-col items-center justify-center text-slate-400">
+          <Loader2 className="w-8 h-8 animate-spin mb-2 text-coral-500" />
+          <p className="text-sm">Fetching notifications...</p>
         </div>
-      ) : error ? (
-        <div className="p-6 bg-red-50 border border-red-200 rounded-2xl flex items-center gap-3 text-[#991B1B]">
-          <AlertCircle size={20} />
-          <span className="text-sm font-medium">{error}</span>
-        </div>
-      ) : filtered.length === 0 ? (
-        <div className="bg-white border border-[#EBE5DF] rounded-3xl p-16 text-center shadow-xs">
-          <div className="w-16 h-16 bg-[#FAF8F5] rounded-2xl flex items-center justify-center mx-auto mb-4 border border-[#EBE5DF]">
-            <Bell size={28} className="text-slate-300" />
+      ) : filteredNotifications.length === 0 ? (
+        /* Empty State */
+        <div className="bg-white rounded-2xl border border-sand-200 p-8 sm:p-16 flex flex-col items-center justify-center text-center shadow-sm">
+          <div className="w-14 h-14 rounded-full bg-sand-100 flex items-center justify-center mb-4 text-slate-400 border border-sand-200">
+            <Bell size={24} />
           </div>
-          <p className="font-serif font-bold text-base text-[#332219] mb-1">
-            {items.length === 0 ? 'No notifications yet' : `No ${filter.toLowerCase()} notifications`}
-          </p>
-          <p className="text-xs text-slate-400">
-            {items.length === 0 ? "We'll notify you when bookings, payments, or updates occur." : "You're all caught up in this filter."}
+          <h3 className="font-serif text-lg font-semibold text-cocoa-900 mb-1">
+            {filter === 'all'
+              ? 'No notifications yet'
+              : filter === 'unread'
+              ? 'No unread notifications'
+              : 'No read notifications'}
+          </h3>
+          <p className="text-xs sm:text-sm text-slate-500 max-w-md">
+            We'll notify you as soon as your messages, booking status, payments, or vouchers update.
           </p>
         </div>
       ) : (
+        /* Notification Items List */
         <div className="space-y-3">
-          {filtered.map((n) => (
-            <div 
-              key={n.id} 
-              className={`p-4 sm:p-5 rounded-2xl border transition-all flex items-start gap-4 ${
-                !n.is_read 
-                  ? 'bg-[#E6F4F1]/20 border-[#0F766E]/30 shadow-2xs' 
-                  : 'bg-white border-[#EBE5DF] hover:border-slate-300'
+          {filteredNotifications.map((item) => (
+            <div
+              key={item.id}
+              className={`group relative bg-white rounded-xl border p-4 sm:p-5 transition-all shadow-sm flex gap-4 items-start ${
+                !item.is_read ? 'border-coral-200 bg-coral-50/20' : 'border-sand-200 hover:border-sand-300'
               }`}
             >
-              {/* Type Icon Container */}
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5 border ${
-                !n.is_read ? 'bg-[#E6F4F1] border-[#0F766E]/20' : 'bg-[#FAF8F5] border-[#EBE5DF]'
-              }`}>
-                {getIconForType(n.type, n.is_read)}
+              {/* Type Icon */}
+              <div className="p-2.5 rounded-xl bg-sand-100 border border-sand-200 shrink-0">
+                {getNotificationIcon(item.type)}
               </div>
 
               {/* Message Details */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#FAF8F5] text-[#0F766E] border border-[#EBE5DF]">
-                    {n.type.replace('_', ' ')}
-                  </span>
-                  <h3 className="font-serif font-bold text-sm text-[#332219]">{n.title}</h3>
-                  {!n.is_read && <span className="w-2 h-2 rounded-full bg-[#F55361] shrink-0" />}
+              <div className="flex-1 min-w-0 pr-12 sm:pr-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <h4 className="text-sm sm:text-base font-semibold text-cocoa-900 truncate">
+                    {item.title}
+                  </h4>
+                  {!item.is_read && (
+                    <span className="w-2 h-2 rounded-full bg-coral-500 shrink-0" />
+                  )}
                 </div>
-
-                {n.body && (
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-2">
-                    {n.body}
-                  </p>
-                )}
-
-                <p className="text-[11px] text-slate-400 font-medium">
-                  {new Date(n.created_at).toLocaleDateString(undefined, { 
-                    month: 'short', 
-                    day: 'numeric', 
-                    year: 'numeric' 
-                  })} at {new Date(n.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed break-words mb-2">
+                  {item.body}
                 </p>
+
+                <div className="flex items-center gap-4 text-[11px] text-slate-400">
+                  <span>{formatDate(item.created_at)}</span>
+                  {item.link && (
+                    <Link
+                      to={item.link}
+                      className="inline-flex items-center gap-1 text-coral-600 hover:underline font-medium"
+                    >
+                      View details <ExternalLink size={12} />
+                    </Link>
+                  )}
+                </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center gap-1.5 shrink-0 ml-2">
-                {!n.is_read && (
-                  <button 
-                    onClick={() => markRead(n.id)} 
-                    className="p-2 text-slate-400 hover:text-[#0F766E] hover:bg-[#FAF8F5] rounded-xl transition-all cursor-pointer border border-transparent hover:border-[#EBE5DF]"
+              <div className="absolute top-4 right-4 sm:static flex items-center gap-1 shrink-0">
+                {!item.is_read && (
+                  <button
+                    onClick={() => markAsRead(item.id)}
+                    disabled={actionId === item.id}
                     title="Mark as read"
+                    className="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
                   >
                     <Check size={16} />
                   </button>
                 )}
-                <button 
-                  onClick={() => deleteNotif(n.id)} 
-                  className="p-2 text-slate-400 hover:text-[#F55361] hover:bg-red-50 rounded-xl transition-all cursor-pointer border border-transparent hover:border-red-100"
+                <button
+                  onClick={() => deleteNotification(item.id)}
+                  disabled={actionId === item.id}
                   title="Delete notification"
+                  className="p-1.5 text-slate-400 hover:text-coral-600 hover:bg-coral-50 rounded-lg transition-colors"
                 >
                   <Trash2 size={16} />
                 </button>

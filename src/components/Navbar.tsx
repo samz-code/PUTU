@@ -44,7 +44,7 @@ function Dropdown({ label, children, width = 'min-w-[300px]' }: { label: string;
         onMouseEnter={() => setOpen(true)}
         aria-expanded={open}
         aria-haspopup="true"
-        className="flex items-center gap-1 text-base font-medium text-slate-600 hover:text-cocoa-700 transition-colors duration-150 py-2"
+        className="flex items-center gap-1 text-sm font-bold uppercase tracking-wide text-slate-600 hover:text-cocoa-700 transition-colors duration-150 py-2"
       >
         {label}
         <ChevronDown size={14} className={`transition-transform duration-200 ${open ? 'rotate-180 text-coral-600' : ''}`} />
@@ -87,8 +87,8 @@ function DropdownLink({
       onClick={onClick}
       className="flex flex-col px-4 py-2.5 hover:bg-sand-100 transition-colors duration-150"
     >
-      <div className="text-sm font-semibold text-cocoa-700">{label}</div>
-      {desc && <div className="text-xs text-slate-400 mt-0.5">{desc}</div>}
+      <div className="text-sm font-bold uppercase tracking-wide text-cocoa-700">{label}</div>
+      {desc && <div className="text-xs text-slate-400 mt-0.5 normal-case tracking-normal font-normal">{desc}</div>}
     </Link>
   );
 }
@@ -98,7 +98,7 @@ function SimpleDropdownLink({ to, label, onClick }: { to: string; label: string;
     <Link
       to={to}
       onClick={onClick}
-      className="flex items-center gap-2 px-4 py-3 text-base font-medium text-cocoa-700 hover:bg-sand-100 transition-colors duration-150"
+      className="flex items-center gap-2 px-4 py-3 text-sm font-bold uppercase tracking-wide text-cocoa-700 hover:bg-sand-100 transition-colors duration-150"
     >
       <span className="w-1 h-1 rounded-full bg-teal-600" />
       {label}
@@ -157,7 +157,7 @@ export default function Navbar() {
             <NavLink
               to="/"
               className={({ isActive }) =>
-                `relative py-2 text-base font-medium transition-colors duration-150 ${
+                `relative py-2 text-sm font-bold uppercase tracking-wide transition-colors duration-150 ${
                   isActive ? 'text-coral-600' : 'text-slate-600 hover:text-cocoa-700'
                 }`
               }
@@ -198,14 +198,14 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center gap-3">
             <a
               href="tel:+254714446328"
-              className="flex items-center gap-1.5 text-sm font-medium text-teal-700 bg-teal-50 hover:bg-teal-100 rounded-md pl-3 pr-4 py-2 transition-colors duration-150"
+              className="flex items-center gap-1.5 text-sm font-bold uppercase tracking-wide text-teal-700 bg-teal-50 hover:bg-teal-100 rounded-md pl-3 pr-4 py-2 transition-colors duration-150"
             >
               <Phone size={14} /> +254 714 446 328
             </a>
             {user ? (
               <Link
                 to={dashboardPath}
-                className="rounded-md bg-coral-600 hover:bg-coral-700 text-white font-semibold py-2.5 px-5 text-sm transition-colors duration-150"
+                className="rounded-md bg-coral-600 hover:bg-coral-700 text-white font-bold uppercase tracking-wide py-2.5 px-5 text-sm transition-colors duration-150"
               >
                 Dashboard
               </Link>
@@ -213,13 +213,13 @@ export default function Navbar() {
               <>
                 <Link
                   to="/login"
-                  className="rounded-md border border-teal-700 text-teal-700 font-semibold py-2.5 px-5 text-sm hover:bg-teal-50 transition-colors duration-150"
+                  className="rounded-md border border-teal-700 text-teal-700 font-bold uppercase tracking-wide py-2.5 px-5 text-sm hover:bg-teal-50 transition-colors duration-150"
                 >
                   Login
                 </Link>
                 <Link
                   to="/register"
-                  className="rounded-md bg-coral-600 hover:bg-coral-700 text-white font-semibold py-2.5 px-5 text-sm transition-colors duration-150"
+                  className="rounded-md bg-coral-600 hover:bg-coral-700 text-white font-bold uppercase tracking-wide py-2.5 px-5 text-sm transition-colors duration-150"
                 >
                   Register
                 </Link>
@@ -258,14 +258,14 @@ export default function Navbar() {
       {open && (
         <div className="lg:hidden border-t border-sand-200 bg-white max-h-[calc(100vh-4rem)] overflow-y-auto">
           <nav className="page-container py-4 flex flex-col gap-1">
-            <Link to="/" className="nav-link py-2.5">Home</Link>
+            <Link to="/" className="py-2.5 text-sm font-bold uppercase tracking-wide text-cocoa-700">Home</Link>
 
             <div className="pt-2 pb-1">
               <div className="px-1 text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
                 Plan Your Trip
               </div>
               {escapesAndPlannerLinks.map((l) => (
-                <Link key={l.to} to={l.to} className="block py-2.5 pl-1 nav-link font-semibold text-cocoa-700">
+                <Link key={l.to} to={l.to} className="block py-2.5 pl-1 text-sm font-bold uppercase tracking-wide text-cocoa-700">
                   {l.label}
                 </Link>
               ))}
@@ -276,7 +276,7 @@ export default function Navbar() {
                 Services
               </div>
               {servicesLinks.map((l) => (
-                <Link key={l.to} to={l.to} className="block py-2.5 pl-1 nav-link font-semibold text-cocoa-700">
+                <Link key={l.to} to={l.to} className="block py-2.5 pl-1 text-sm font-bold uppercase tracking-wide text-cocoa-700">
                   {l.label}
                 </Link>
               ))}
@@ -287,7 +287,7 @@ export default function Navbar() {
                 Company
               </div>
               {companyLinks.map((l) => (
-                <Link key={l.to} to={l.to} className="flex items-center gap-2 nav-link py-2.5 pl-1">
+                <Link key={l.to} to={l.to} className="flex items-center gap-2 py-2.5 pl-1 text-sm font-bold uppercase tracking-wide text-cocoa-700">
                   <span className="w-1 h-1 rounded-full bg-teal-600" />
                   {l.label}
                 </Link>
@@ -297,7 +297,7 @@ export default function Navbar() {
             <div className="pt-4 border-t border-sand-200">
               <a
                 href="tel:+254714446328"
-                className="flex items-center gap-2 text-sm font-medium text-teal-700 bg-teal-50 rounded-md w-fit pl-3 pr-4 py-2"
+                className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-teal-700 bg-teal-50 rounded-md w-fit pl-3 pr-4 py-2"
               >
                 <Phone size={14} /> +254 714 446 328
               </a>
@@ -307,7 +307,7 @@ export default function Navbar() {
               {user ? (
                 <Link
                   to={dashboardPath}
-                  className="flex-1 text-center rounded-md bg-coral-600 text-white font-semibold py-2.5 text-xs"
+                  className="flex-1 text-center rounded-md bg-coral-600 text-white font-bold uppercase tracking-wide py-2.5 text-xs"
                 >
                   Dashboard
                 </Link>
@@ -315,13 +315,13 @@ export default function Navbar() {
                 <>
                   <Link
                     to="/login"
-                    className="flex-1 text-center rounded-md border border-teal-700 text-teal-700 font-semibold py-2.5 text-xs"
+                    className="flex-1 text-center rounded-md border border-teal-700 text-teal-700 font-bold uppercase tracking-wide py-2.5 text-xs"
                   >
                     Login
                   </Link>
                   <Link
                     to="/register"
-                    className="flex-1 text-center rounded-md bg-coral-600 text-white font-semibold py-2.5 text-xs"
+                    className="flex-1 text-center rounded-md bg-coral-600 text-white font-bold uppercase tracking-wide py-2.5 text-xs"
                   >
                     Register
                   </Link>

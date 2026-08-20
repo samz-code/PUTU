@@ -3,6 +3,7 @@ import { AuthProvider } from '@/lib/auth';
 import PublicLayout from '@/components/PublicLayout';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import ScrollToTop from '@/components/ScrollToTop';
+import GlobalWhatsApp from '@/components/GlobalWhatsApp';
 
 // Public Pages
 import Home from '@/pages/public/Home';
@@ -14,6 +15,9 @@ import Destinations from '@/pages/public/Destinations';
 import About from '@/pages/public/About';
 import Partners from '@/pages/public/Partners';
 import Contact from '@/pages/public/Contact';
+import Privacy from '@/pages/public/Privacy';
+import Terms from '@/pages/public/Terms';
+import Sitemap from '@/pages/public/Sitemap';
 import Journal from '@/pages/public/Journal';
 import JournalArticleDetail from '@/pages/public/JournalArticleDetail';
 import HerTurn from '@/pages/public/HerTurn';
@@ -48,6 +52,7 @@ import AdminHomeContent from '@/pages/admin/AdminHomeContent';
 import AdminAbout from '@/pages/admin/AdminAbout';
 import AdminBookings from '@/pages/admin/AdminBookings';
 import AdminBriefs from '@/pages/admin/AdminBriefs';
+import AdminPlanner from '@/pages/admin/AdminPlanner'; // <-- Newly added import
 import AdminQuotes from '@/pages/admin/AdminQuotes';
 import AdminCustomers from '@/pages/admin/AdminCustomers';
 import AdminHotels from '@/pages/admin/AdminHotels';
@@ -71,6 +76,7 @@ import AdminJournal from '@/pages/admin/AdminJournal';
 import AdminHerTurn from '@/pages/admin/AdminHerTurn';
 import AdminMessages from '@/pages/admin/AdminMessages';
 import AdminNotifications from '@/pages/admin/AdminNotifications';
+import AdminSubscribers from '@/pages/admin/AdminSubscribers';
 
 // Partner Portals
 import HotelLayout from '@/pages/partner/hotel/HotelLayout';
@@ -101,6 +107,7 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter>
         <ScrollToTop />
+        <GlobalWhatsApp />
         <Routes>
           {/* Public website */}
           <Route element={<PublicLayout />}>
@@ -122,6 +129,11 @@ export default function App() {
             <Route path="/her-turn/:slug" element={<HerTurnEditionDetail />} />
 
             <Route path="/contact" element={<Contact />} />
+
+            {/* Legal / Site info */}
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/sitemap" element={<Sitemap />} />
 
             {/* Auth Routes */}
             <Route path="/login" element={<Login />} />
@@ -159,6 +171,7 @@ export default function App() {
             <Route path="her-turn" element={<AdminHerTurn />} />
             <Route path="bookings" element={<AdminBookings />} />
             <Route path="briefs" element={<AdminBriefs />} />
+            <Route path="planner-admin" element={<AdminPlanner />} /> {/* <-- Newly added route */}
             <Route path="quotes" element={<AdminQuotes />} />
             <Route path="customers" element={<AdminCustomers />} />
             <Route path="messages" element={<AdminMessages />} />
@@ -175,6 +188,7 @@ export default function App() {
             <Route path="notifications" element={<AdminNotifications />} />
             <Route path="settings" element={<AdminSettings />} />
             <Route path="super" element={<AdminSuper />} />
+            <Route path="newsletter" element={<AdminSubscribers />} />
           </Route>
 
           {/* Partner Portals */}

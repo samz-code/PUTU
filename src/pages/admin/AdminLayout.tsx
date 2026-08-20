@@ -2,7 +2,8 @@ import {
   LayoutDashboard, Home, Compass, Building2, Plane, FileSpreadsheet, FileText, 
   Users, Hotel, Utensils, Car, UserCheck, Truck, 
   CreditCard, Calendar, FolderOpen, BarChart3, Star, 
-  Settings, Shield, Sparkles, Info, BookOpen, MessageSquare, BellRing 
+  Settings, Shield, Sparkles, Info, BookOpen, MessageSquare, BellRing, Mail, CheckSquare,
+  MapPinned, Gem, Handshake
 } from 'lucide-react';
 import DashboardShell, { NavItem } from '@/components/DashboardShell';
 import Notifications from '@/components/Notifications';
@@ -17,215 +18,229 @@ export default function AdminLayout() {
     // 1. OVERVIEW
     { 
       to: '/admin', 
-      label: 'Dashboard', 
+      label: 'DASHBOARD', 
       icon: LayoutDashboard, 
       end: true,
       category: 'Overview',
-      badgeColor: 'bg-slate-100 text-slate-700 border-slate-200'
+      badgeColor: 'bg-[#17b5b1]/10 text-[#17b5b1] border-[#17b5b1]/20'
     },
     { 
       to: '/admin/calendar', 
-      label: 'Calendar', 
+      label: 'CALENDAR', 
       icon: Calendar,
       category: 'Overview',
-      badgeColor: 'bg-slate-100 text-slate-700 border-slate-200'
+      badgeColor: 'bg-[#17b5b1]/10 text-[#17b5b1] border-[#17b5b1]/20'
     },
     { 
       to: '/admin/analytics', 
-      label: 'Analytics', 
+      label: 'ANALYTICS', 
       icon: BarChart3,
       category: 'Overview',
-      badgeColor: 'bg-slate-100 text-slate-700 border-slate-200'
+      badgeColor: 'bg-[#17b5b1]/10 text-[#17b5b1] border-[#17b5b1]/20'
     },
 
     // 2. CONTENT MANAGEMENT
     { 
       to: '/admin/home-content', 
-      label: 'Homepage Content', 
+      label: 'HOMEPAGE CONTENT', 
       icon: Home,
       category: 'Content Management',
-      badgeColor: 'bg-teal-50 text-teal-700 border-teal-200'
+      badgeColor: 'bg-[#17b5b1]/10 text-[#17b5b1] border-[#17b5b1]/20'
     },
     { 
       to: '/admin/about', 
-      label: 'About Content', 
+      label: 'ABOUT CONTENT', 
       icon: Info,
       category: 'Content Management',
-      badgeColor: 'bg-teal-50 text-teal-700 border-teal-200'
+      badgeColor: 'bg-[#17b5b1]/10 text-[#17b5b1] border-[#17b5b1]/20'
     },
     { 
       to: '/admin/destinations', 
-      label: 'Destinations', 
+      label: 'DESTINATIONS', 
       icon: Compass,
       category: 'Content Management',
-      badgeColor: 'bg-teal-50 text-teal-700 border-teal-200'
+      badgeColor: 'bg-[#17b5b1]/10 text-[#17b5b1] border-[#17b5b1]/20'
     },
     { 
       to: '/admin/experiences', 
-      label: 'Experiences', 
-      icon: Compass,
+      label: 'EXPERIENCES', 
+      icon: MapPinned,
       category: 'Content Management',
-      badgeColor: 'bg-teal-50 text-teal-700 border-teal-200'
+      badgeColor: 'bg-[#17b5b1]/10 text-[#17b5b1] border-[#17b5b1]/20'
     },
     { 
       to: '/admin/accommodations', 
-      label: 'Accommodations', 
+      label: 'ACCOMMODATIONS', 
       icon: Building2,
       category: 'Content Management',
-      badgeColor: 'bg-teal-50 text-teal-700 border-teal-200'
+      badgeColor: 'bg-[#17b5b1]/10 text-[#17b5b1] border-[#17b5b1]/20'
     },
     { 
       to: '/admin/concierge', 
-      label: 'Concierge Services', 
+      label: 'CONCIERGE SERVICES', 
       icon: Sparkles,
       category: 'Content Management',
-      badgeColor: 'bg-teal-50 text-teal-700 border-teal-200'
+      badgeColor: 'bg-[#17b5b1]/10 text-[#17b5b1] border-[#17b5b1]/20'
     },
     { 
       to: '/admin/journal', 
-      label: 'Journal & Stories', 
+      label: 'JOURNAL & STORIES', 
       icon: BookOpen,
       category: 'Content Management',
-      badgeColor: 'bg-teal-50 text-teal-700 border-teal-200'
+      badgeColor: 'bg-[#17b5b1]/10 text-[#17b5b1] border-[#17b5b1]/20'
     },
     { 
       to: '/admin/her-turn', 
-      label: 'Her Turn Retreats', 
-      icon: Sparkles,
+      label: 'HER TURN RETREATS', 
+      icon: Gem,
       category: 'Content Management',
-      badgeColor: 'bg-coral-50 text-coral-700 border-coral-200'
+      badgeColor: 'bg-[#f26b5e]/10 text-[#f26b5e] border-[#f26b5e]/20'
     },
     { 
       to: '/admin/partners', 
-      label: 'Partners & Portals', 
-      icon: Building2,
+      label: 'PARTNERS & PORTALS', 
+      icon: Handshake,
       category: 'Content Management',
-      badgeColor: 'bg-teal-50 text-teal-700 border-teal-200'
+      badgeColor: 'bg-[#17b5b1]/10 text-[#17b5b1] border-[#17b5b1]/20'
     },
     { 
       to: '/admin/reviews', 
-      label: 'Reviews', 
+      label: 'REVIEWS', 
       icon: Star,
       category: 'Content Management',
-      badgeColor: 'bg-teal-50 text-teal-700 border-teal-200'
+      badgeColor: 'bg-[#17b5b1]/10 text-[#17b5b1] border-[#17b5b1]/20'
     },
 
     // 3. SALES & CRM
     { 
       to: '/admin/bookings', 
-      label: 'Bookings', 
+      label: 'BOOKINGS', 
       icon: Plane,
       category: 'Sales & CRM',
-      badgeColor: 'bg-blue-50 text-blue-700 border-blue-200'
+      badgeColor: 'bg-[#4274d9]/10 text-[#4274d9] border-[#4274d9]/20'
     },
     { 
       to: '/admin/briefs', 
-      label: 'Journey Briefs', 
+      label: 'JOURNEY BRIEFS', 
       icon: FileSpreadsheet,
       category: 'Sales & CRM',
-      badgeColor: 'bg-blue-50 text-blue-700 border-blue-200'
+      badgeColor: 'bg-[#4274d9]/10 text-[#4274d9] border-[#4274d9]/20'
+    },
+    { 
+      to: '/admin/planner-admin', 
+      label: 'JOURNEY PLANNER', 
+      icon: CheckSquare,
+      category: 'Sales & CRM',
+      badgeColor: 'bg-[#4274d9]/10 text-[#4274d9] border-[#4274d9]/20'
     },
     { 
       to: '/admin/quotes', 
-      label: 'Quote Builder', 
+      label: 'QUOTE BUILDER', 
       icon: FileText,
       category: 'Sales & CRM',
-      badgeColor: 'bg-blue-50 text-blue-700 border-blue-200'
+      badgeColor: 'bg-[#4274d9]/10 text-[#4274d9] border-[#4274d9]/20'
     },
     { 
       to: '/admin/customers', 
-      label: 'Customers', 
+      label: 'CUSTOMERS', 
       icon: Users,
       category: 'Sales & CRM',
-      badgeColor: 'bg-blue-50 text-blue-700 border-blue-200'
+      badgeColor: 'bg-[#4274d9]/10 text-[#4274d9] border-[#4274d9]/20'
     },
     { 
       to: '/admin/messages', 
-      label: 'Messages', 
+      label: 'MESSAGES', 
       icon: MessageSquare,
       category: 'Sales & CRM',
-      badgeColor: 'bg-blue-50 text-blue-700 border-blue-200'
+      badgeColor: 'bg-[#4274d9]/10 text-[#4274d9] border-[#4274d9]/20'
     },
     { 
       to: '/admin/payments', 
-      label: 'Payments', 
+      label: 'PAYMENTS', 
       icon: CreditCard,
       category: 'Sales & CRM',
-      badgeColor: 'bg-blue-50 text-blue-700 border-blue-200'
+      badgeColor: 'bg-[#4274d9]/10 text-[#4274d9] border-[#4274d9]/20'
     },
     { 
       to: '/admin/documents', 
-      label: 'Documents', 
+      label: 'DOCUMENTS', 
       icon: FolderOpen,
       category: 'Sales & CRM',
-      badgeColor: 'bg-blue-50 text-blue-700 border-blue-200'
+      badgeColor: 'bg-[#4274d9]/10 text-[#4274d9] border-[#4274d9]/20'
+    },
+    { 
+      to: '/admin/newsletter', 
+      label: 'NEWSLETTER', 
+      icon: Mail,
+      category: 'Sales & CRM',
+      badgeColor: 'bg-[#4274d9]/10 text-[#4274d9] border-[#4274d9]/20'
     },
 
     // 4. VENDORS & FLEET
     { 
       to: '/admin/hotels', 
-      label: 'Hotel Partners', 
+      label: 'HOTEL PARTNERS', 
       icon: Hotel,
       category: 'Vendors & Fleet',
-      badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200'
+      badgeColor: 'bg-[#17b5b1]/10 text-[#17b5b1] border-[#17b5b1]/20'
     },
     { 
       to: '/admin/restaurants', 
-      label: 'Restaurants', 
+      label: 'RESTAURANTS', 
       icon: Utensils,
       category: 'Vendors & Fleet',
-      badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200'
+      badgeColor: 'bg-[#17b5b1]/10 text-[#17b5b1] border-[#17b5b1]/20'
     },
     { 
       to: '/admin/drivers', 
-      label: 'Drivers', 
+      label: 'DRIVERS', 
       icon: Car,
       category: 'Vendors & Fleet',
-      badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200'
+      badgeColor: 'bg-[#17b5b1]/10 text-[#17b5b1] border-[#17b5b1]/20'
     },
     { 
       to: '/admin/guides', 
-      label: 'Tour Guides', 
+      label: 'TOUR GUIDES', 
       icon: UserCheck,
       category: 'Vendors & Fleet',
-      badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200'
+      badgeColor: 'bg-[#17b5b1]/10 text-[#17b5b1] border-[#17b5b1]/20'
     },
     { 
       to: '/admin/transfers', 
-      label: 'Transfers & Fleet', 
+      label: 'TRANSFERS & FLEET', 
       icon: Truck,
       category: 'Vendors & Fleet',
-      badgeColor: 'bg-emerald-50 text-emerald-700 border-emerald-200'
+      badgeColor: 'bg-[#17b5b1]/10 text-[#17b5b1] border-[#17b5b1]/20'
     },
 
     // 5. ADMINISTRATION
     { 
       to: '/admin/notifications', 
-      label: 'System Alerts', 
+      label: 'SYSTEM ALERTS', 
       icon: BellRing,
       category: 'Administration',
-      badgeColor: 'bg-rose-50 text-rose-700 border-rose-200'
+      badgeColor: 'bg-[#f26b5e]/10 text-[#f26b5e] border-[#f26b5e]/20'
     },
     { 
       to: '/admin/settings', 
-      label: 'Settings', 
+      label: 'SETTINGS', 
       icon: Settings,
       category: 'Administration',
-      badgeColor: 'bg-rose-50 text-rose-700 border-rose-200'
+      badgeColor: 'bg-[#f26b5e]/10 text-[#f26b5e] border-[#f26b5e]/20'
     },
     { 
       to: '/admin/super', 
-      label: 'Super Admin', 
+      label: 'SUPER ADMIN', 
       icon: Shield,
       category: 'Administration',
-      badgeColor: 'bg-rose-50 text-rose-700 border-rose-200'
+      badgeColor: 'bg-[#f26b5e]/10 text-[#f26b5e] border-[#f26b5e]/20'
     },
   ];
 
   return (
     <DashboardShell
-      title="Admin Portal"
-      subtitle="Everything you need to run Putu Travels day to day"
+      title="ADMIN PORTAL"
+      subtitle="EVERYTHING YOU NEED TO RUN PUTU TRAVELS DAY TO DAY"
       navItems={adminNavItems}
       homePath="/admin"
       topRightContent={<Notifications />}

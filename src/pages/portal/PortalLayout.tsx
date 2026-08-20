@@ -1,7 +1,7 @@
 import { NavLink, Outlet, useNavigate, Link } from 'react-router-dom';
 import {
   LayoutDashboard, Plane, FileText, CreditCard, FolderOpen, MessageSquare,
-  Bell, Heart, User, LogOut, Plus, Menu, X,
+  Bell, Heart, User, LogOut, Menu, X,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/auth';
@@ -64,23 +64,12 @@ function SidebarFooter({ userEmail, onSignOut }: Pick<SidebarContentProps, 'user
   );
 }
 
-function PlanJourneyButton({ onNavigate }: { onNavigate?: () => void }) {
-  return (
-    <Link to="/planner" className="btn-primary w-full text-sm" onClick={onNavigate}>
-      <Plus size={16} /> Plan New Journey
-    </Link>
-  );
-}
-
 export default function PortalLayout() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  // Initial load + realtime subscription so the badge doesn't go stale while
-  // the user is sitting on the page (e.g. a new message arrives, or they
-  // mark something read in another tab).
   useEffect(() => {
     if (!user) {
       setUnreadCount(0);
@@ -109,9 +98,6 @@ export default function PortalLayout() {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'notifications', filter: `user_id=eq.${user.id}` },
         () => {
-          // Any insert/update/delete on this user's notifications can change
-          // the unread total, so just re-fetch the count rather than trying
-          // to patch it in place from partial row data.
           loadUnreadCount();
         }
       )
@@ -128,7 +114,6 @@ export default function PortalLayout() {
     navigate('/');
   };
 
-  // Close the mobile drawer on Escape for keyboard users.
   useEffect(() => {
     if (!drawerOpen) return;
     const onKeyDown = (e: KeyboardEvent) => {
@@ -139,19 +124,17 @@ export default function PortalLayout() {
   }, [drawerOpen]);
 
   return (
-    <div className="min-h-screen bg-sand-50 flex w-full max-w-full overflow-x-hidden">
+    /* Removed overflow-x-hidden from main container so position: sticky on header elements works correctly */
+    <div className="min-h-screen bg-sand-50 flex w-full max-w-full">
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex w-72 flex-col bg-white border-r border-sand-200 fixed h-screen shrink-0">
+      <aside className="hidden lg:flex w-72 flex-col bg-white border-r border-sand-200 fixed h-screen shrink-0 z-40">
         <Link to="/" className="flex items-center justify-center px-6 h-28 border-b border-sand-200 bg-white">
           <img
-            src="/customerportallogo.png"
+            src="/customerlogo.png"
             alt="Customer Portal Logo"
             className="h-20 w-auto object-contain"
           />
         </Link>
-        <div className="px-3 py-4 border-b border-sand-200">
-          <PlanJourneyButton />
-        </div>
         <SidebarNav unreadCount={unreadCount} />
         <SidebarFooter userEmail={user?.email} onSignOut={handleSignOut} />
       </aside>
@@ -177,7 +160,7 @@ export default function PortalLayout() {
                 onClick={() => setDrawerOpen(false)}
               >
                 <img
-                  src="/customerportallogo.png"
+                  src="/customerlogo.png"
                   alt="Customer Portal Logo"
                   className="h-16 sm:h-20 w-auto object-contain"
                 />
@@ -190,9 +173,6 @@ export default function PortalLayout() {
                 <X size={20} />
               </button>
             </div>
-            <div className="px-3 py-3 border-b border-sand-200">
-              <PlanJourneyButton onNavigate={() => setDrawerOpen(false)} />
-            </div>
             <SidebarNav unreadCount={unreadCount} onNavigate={() => setDrawerOpen(false)} />
             <SidebarFooter userEmail={user?.email} onSignOut={handleSignOut} />
           </aside>
@@ -200,10 +180,24 @@ export default function PortalLayout() {
       )}
 
       {/* Main Content Area */}
-      {/* min-w-0 is the critical fix: without it, a flex item won't shrink below its
-          content's intrinsic width, so wide children push this column past 100vw
-          and clip/shift everything on mobile. */}
       <div className="flex-1 min-w-0 w-full lg:ml-72">
+        {/* Desktop header — sticky top-0 */}
+        <header className="hidden lg:flex items-center justify-end h-16 px-6 xl:px-10 border-b border-sand-200 bg-white sticky top-0 z-30">
+          <Link
+            to="/portal/notifications"
+            className="relative p-2 rounded-lg text-cocoa-700 hover:bg-sand-50 transition-colors"
+            aria-label={unreadCount > 0 ? `Notifications, ${unreadCount} unread` : 'Notifications'}
+          >
+            <Bell size={20} />
+            {unreadCount > 0 && (
+              <span className="absolute top-1 right-1 bg-coral-500 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-full leading-none">
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </span>
+            )}
+          </Link>
+        </header>
+
+        {/* Mobile header — sticky top-0 */}
         <header className="lg:hidden bg-white border-b border-sand-200 h-16 sm:h-20 flex items-center justify-between px-3 sm:px-4 sticky top-0 z-30">
           <button
             onClick={() => setDrawerOpen(true)}
@@ -214,7 +208,7 @@ export default function PortalLayout() {
           </button>
           <Link to="/" className="flex items-center min-w-0">
             <img
-              src="/customerportallogo.png"
+              src="/customerlogo.png"
               alt="Customer Portal Logo"
               className="h-11 sm:h-14 w-auto object-contain"
             />
@@ -228,7 +222,8 @@ export default function PortalLayout() {
             )}
           </Link>
         </header>
-        <main className="w-full max-w-full overflow-x-hidden p-3 sm:p-6 lg:p-8 lg:max-w-5xl">
+
+        <main className="w-full max-w-[1600px] mx-auto p-3 sm:p-6 lg:p-8 xl:p-10">
           <Outlet />
         </main>
       </div>

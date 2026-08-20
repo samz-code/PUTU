@@ -278,17 +278,78 @@ export default function JourneyPlanner() {
     setData((d) => ({ ...d, [key]: value }));
   };
 
+  // Validation function before proceeding to next step
+  const validateCurrentStep = () => {
+    setErrorMsg(null);
+    if (step === 1) {
+      if (!data.fullName.trim()) {
+        setErrorMsg('Please enter your full name before continuing.');
+        return false;
+      }
+      if (!data.email.trim()) {
+        setErrorMsg('Please enter your email address before continuing.');
+        return false;
+      }
+      if (!data.phone.trim()) {
+        setErrorMsg('Please enter your phone/WhatsApp number before continuing.');
+        return false;
+      }
+      if (data.numAdults < 1) {
+        setErrorMsg('Please specify at least 1 adult guest.');
+        return false;
+      }
+    } else if (step === 2) {
+      if (!data.arrivalDate.trim() && !data.flexibleDates) {
+        setErrorMsg('Please select a target arrival date or check that your travel dates are flexible.');
+        return false;
+      }
+      if (!data.departureDate.trim() && !data.flexibleDates) {
+        setErrorMsg('Please select a target departure date or check that your travel dates are flexible.');
+        return false;
+      }
+    } else if (step === 3) {
+      if (data.destinations.length === 0) {
+        setErrorMsg('Please select at least one destination or stop for your journey.');
+        return false;
+      }
+    } else if (step === 4) {
+      if (data.propertyTypes.length === 0) {
+        setErrorMsg('Please select at least one preferred property style.');
+        return false;
+      }
+    } else if (step === 5) {
+      if (data.vehicleTypes.length === 0) {
+        setErrorMsg('Please select at least one preferred fleet class.');
+        return false;
+      }
+    } else if (step === 6) {
+      if (data.experiences.length === 0) {
+        setErrorMsg('Please select at least one experience or note none if skipped (choose an excursion).');
+        return false;
+      }
+    } else if (step === 7) {
+      if (data.dining.length === 0) {
+        setErrorMsg('Please choose at least one curated dining preference or setup.');
+        return false;
+      }
+    }
+    return true;
+  };
+
   const next = () => {
+    if (!validateCurrentStep()) return;
     setStep((s) => Math.min(9, s + 1));
     window.scrollTo({ top: 120, behavior: 'smooth' });
   };
   
   const back = () => {
+    setErrorMsg(null);
     setStep((s) => Math.max(1, s - 1));
     window.scrollTo({ top: 120, behavior: 'smooth' });
   };
 
   const submit = async () => {
+    if (!validateCurrentStep()) return;
     setLoading(true);
     setErrorMsg(null);
 
@@ -387,7 +448,7 @@ export default function JourneyPlanner() {
             <div className="flex items-start gap-3">
               <AlertTriangle className="text-coral-600 shrink-0 mt-0.5" size={20} />
               <div>
-                <h4 className="text-xs font-bold uppercase tracking-wider text-coral-800">Submission Error</h4>
+                <h4 className="text-xs font-bold uppercase tracking-wider text-coral-800">Action Required</h4>
                 <p className="text-xs sm:text-sm text-coral-700 mt-0.5">{errorMsg}</p>
               </div>
             </div>
@@ -477,11 +538,18 @@ export default function JourneyPlanner() {
                     <button
                       key={s.num}
                       type="button"
-                      onClick={() => setStep(s.num)}
+                      onClick={() => {
+                        if (s.num < step) {
+                          setStep(s.num);
+                          setErrorMsg(null);
+                        }
+                      }}
                       className={`group relative flex flex-col items-center p-2 rounded-xl transition-all duration-200 ${
                         isCurrent
                           ? 'bg-coral-50/80 border border-coral-200'
-                          : 'hover:bg-sand-50'
+                          : s.num < step
+                          ? 'hover:bg-sand-50 cursor-pointer'
+                          : 'opacity-60 cursor-not-allowed'
                       }`}
                     >
                       <div
@@ -490,14 +558,14 @@ export default function JourneyPlanner() {
                             ? 'bg-coral-500 text-white shadow-md shadow-coral-500/30 scale-105'
                             : isDone
                             ? 'bg-teal-500 text-white group-hover:scale-105'
-                            : 'bg-slate-100 text-slate-500 group-hover:bg-slate-200 group-hover:text-slate-700'
+                            : 'bg-slate-100 text-slate-500'
                         }`}
                       >
                         {isDone ? <Check size={16} className="stroke-[3]" /> : <IconComp size={16} />}
                       </div>
                       <span
                         className={`text-[10px] font-semibold mt-1.5 transition-colors truncate max-w-full ${
-                          isCurrent ? 'text-coral-600 font-bold' : isDone ? 'text-cocoa-900' : 'text-slate-400 group-hover:text-slate-700'
+                          isCurrent ? 'text-coral-600 font-bold' : isDone ? 'text-cocoa-900' : 'text-slate-400'
                         }`}
                       >
                         {s.label}
@@ -535,7 +603,7 @@ export default function JourneyPlanner() {
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
-                      <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Full Name</label>
+                      <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Full Name *</label>
                       <input
                         className="input min-h-[48px] rounded-xl focus:border-coral-500"
                         placeholder="e.g. Jane Doe"
@@ -544,7 +612,7 @@ export default function JourneyPlanner() {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Email Address</label>
+                      <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Email Address *</label>
                       <input
                         type="email"
                         className="input min-h-[48px] rounded-xl focus:border-coral-500"
@@ -554,7 +622,7 @@ export default function JourneyPlanner() {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">WhatsApp / Phone</label>
+                      <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">WhatsApp / Phone *</label>
                       <input
                         className="input min-h-[48px] rounded-xl focus:border-coral-500"
                         placeholder="+254 7..."
@@ -571,7 +639,7 @@ export default function JourneyPlanner() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Adult Guests (12+ yrs)</label>
+                      <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Adult Guests (12+ yrs) *</label>
                       <div className="flex items-center gap-4">
                         <button
                           type="button"
@@ -645,7 +713,7 @@ export default function JourneyPlanner() {
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
-                      <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Target Arrival Date</label>
+                      <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Target Arrival Date {!data.flexibleDates && '*'}</label>
                       <input
                         type="date"
                         className="input min-h-[48px] rounded-xl focus:border-coral-500"
@@ -654,7 +722,7 @@ export default function JourneyPlanner() {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Target Departure Date</label>
+                      <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">Target Departure Date {!data.flexibleDates && '*'}</label>
                       <input
                         type="date"
                         className="input min-h-[48px] rounded-xl focus:border-coral-500"
@@ -704,11 +772,11 @@ export default function JourneyPlanner() {
                   <div className="bg-coral-50/60 border border-coral-100 p-4 rounded-2xl flex items-start gap-3">
                     <Info size={18} className="text-coral-600 shrink-0 mt-0.5" />
                     <p className="text-xs text-coral-900 leading-relaxed">
-                      Select all regions and stops you would like included in your multi-city coastal itinerary. We build seamless private transfers between each location.
+                      Select at least one region or stop you would like included in your multi-city coastal itinerary. We build seamless private transfers between each location.
                     </p>
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-3">Preferred Destinations & Stops (Multi-select)</label>
+                    <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-3">Preferred Destinations & Stops * (Multi-select)</label>
                     <ChipGroup options={destinationsList} selected={data.destinations} onToggle={(v) => toggle('destinations', v)} />
                   </div>
                 </div>
@@ -718,7 +786,7 @@ export default function JourneyPlanner() {
               {step === 4 && (
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Preferred Property Style</label>
+                    <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Preferred Property Style *</label>
                     <ChipGroup options={propertyTypes} selected={data.propertyTypes} onToggle={(v) => toggle('propertyTypes', v)} />
                   </div>
 
@@ -742,7 +810,7 @@ export default function JourneyPlanner() {
               {step === 5 && (
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Preferred Fleet Class</label>
+                    <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Preferred Fleet Class *</label>
                     <ChipGroup options={vehicleTypes} selected={data.vehicleTypes} onToggle={(v) => toggle('vehicleTypes', v)} />
                   </div>
 
@@ -768,10 +836,13 @@ export default function JourneyPlanner() {
                   <div className="bg-sand-50 border border-slate-200/80 p-4 rounded-2xl flex items-start gap-3">
                     <Compass size={18} className="text-coral-600 shrink-0 mt-0.5" />
                     <p className="text-xs text-slate-700 leading-relaxed">
-                      Choose any marine adventures, wildlife safaris, or cultural excursions. Our concierge reserves all permits, private boat charters, and expert guides in advance.
+                      Choose at least one marine adventure, wildlife safari, or cultural excursion to continue. Our concierge reserves all permits, private boat charters, and expert guides in advance.
                     </p>
                   </div>
-                  <ChipGroup options={experienceOptions} selected={data.experiences} onToggle={(v) => toggle('experiences', v)} />
+                  <div>
+                    <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-3">Curated Experiences * (Multi-select)</label>
+                    <ChipGroup options={experienceOptions} selected={data.experiences} onToggle={(v) => toggle('experiences', v)} />
+                  </div>
                 </div>
               )}
 
@@ -784,7 +855,7 @@ export default function JourneyPlanner() {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Curated Culinary Experiences & Setups</label>
+                    <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Curated Culinary Experiences & Setups *</label>
                     <ChipGroup options={diningOptions} selected={data.dining} onToggle={(v) => toggle('dining', v)} />
                   </div>
                 </div>
