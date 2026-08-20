@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
-import type { HerTurnEdition, HerTurnTicketTier } from '@/types/HerTurn';
-import { effectiveTierPrice } from '@/types/HerTurn';
+import type { HerTurnEdition, HerTurnTicketTier } from '@/types/Herturn';
+import { effectiveTierPrice } from '@/types/Herturn';
 import { ArrowLeft, ShieldCheck, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

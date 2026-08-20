@@ -1,8 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
-import type { HerTurnEdition, HerTurnTicketTier } from '@/types/HerTurn';
-import { effectiveTierPrice, tierSpotsLeft } from '@/types/HerTurn';
+import type { HerTurnEdition, HerTurnTicketTier } from '@/types/Herturn';
+import { effectiveTierPrice, tierSpotsLeft } from '@/types/Herturn';
 import { downloadIcsFile, buildGoogleCalendarUrl } from '@/utils/herTurnCalendar';
 import {
   ArrowLeft, Calendar, MapPin, Clock, Users, Shirt, Download, ExternalLink,
